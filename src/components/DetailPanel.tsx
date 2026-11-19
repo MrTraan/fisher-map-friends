@@ -1,5 +1,6 @@
 import { CONTAINERS } from '../data/containers'
 import type { Container, Water, Zone } from '../data/types'
+import { ItemIcon, WowheadLink } from './ItemIcon'
 import {
   containerById,
   containersForZone,
@@ -23,11 +24,39 @@ const WATER_LABEL: Record<Water, string> = {
   special: 'Special spots',
 }
 
+/** Item name behind a selection, used to find its icon. Zones have none. */
+function itemName(sel: Selection): string | undefined {
+  switch (sel.type) {
+    case 'fish':
+      return fishById.get(sel.id)?.name
+    case 'container':
+      return containerById.get(sel.id)?.name
+    case 'loot':
+      return sel.name
+    case 'zone':
+      return undefined
+  }
+}
+
 function Link({ to, onSelect, children }: { to: Selection; onSelect: Props['onSelect']; children: React.ReactNode }) {
+  const name = itemName(to)
   return (
     <button type="button" className="link" onClick={() => onSelect(to)}>
+      {name && <ItemIcon name={name} />}
       {children}
     </button>
+  )
+}
+
+function Title({ name }: { name: string }) {
+  return (
+    <>
+      <h2 className="title">
+        <ItemIcon name={name} large />
+        {name}
+      </h2>
+      <WowheadLink name={name} />
+    </>
   )
 }
 
@@ -128,7 +157,7 @@ function FishDetail({ id, onSelect }: { id: string; onSelect: Props['onSelect'] 
   return (
     <>
       <p className="kind">Fish</p>
-      <h2>{fish.name}</h2>
+      <Title name={fish.name} />
       {fish.note && <p>{fish.note}</p>}
       {opens && (
         <section>
@@ -171,7 +200,7 @@ function ContainerDetail({ id, onSelect }: { id: string; onSelect: Props['onSele
   return (
     <>
       <p className="kind">{c.kind}</p>
-      <h2>{c.name}</h2>
+      <Title name={c.name} />
       {c.note && <p>{c.note}</p>}
       {c.withFish && (
         <p>
@@ -196,7 +225,7 @@ function LootDetail({ name, onSelect }: { name: string; onSelect: Props['onSelec
   return (
     <>
       <p className="kind">Loot</p>
-      <h2>{name}</h2>
+      <Title name={name} />
       {containers.length > 0 && (
         <section>
           <h3>Found inside</h3>

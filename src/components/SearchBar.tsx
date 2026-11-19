@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react'
 import { search, type Selection } from '../lib/catalog'
+import { ItemIcon } from './ItemIcon'
 
 export function SearchBar({ onSelect }: { onSelect: (s: Selection) => void }) {
   const [query, setQuery] = useState('')
@@ -59,7 +60,10 @@ export function SearchBar({ onSelect }: { onSelect: (s: Selection) => void }) {
               }}
               onMouseEnter={() => setActive(i)}
             >
-              <span>{r.label}</span>
+              <span className="result-label">
+                {r.kind !== 'Zone' && <ItemIcon name={r.label} />}
+                {r.label}
+              </span>
               <span className="result-kind">{r.kind}</span>
             </li>
           ))}
