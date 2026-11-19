@@ -13,8 +13,8 @@ export interface ContinentArt {
 }
 
 export const CONTINENT_ART: Record<Continent, ContinentArt> = {
-  kalimdor: { name: 'Kalimdor', src: '/maps/kalimdor.jpg', width: 1002, height: 668, crop: [348, 20, 340, 650] },
-  'eastern-kingdoms': { name: 'Eastern Kingdoms', src: '/maps/eastern-kingdoms.jpg', width: 1002, height: 668, crop: [352, 0, 340, 650] },
+  kalimdor: { name: 'Kalimdor', src: '/maps/kalimdor.jpg', width: 1002, height: 668, crop: [330, 20, 390, 650] },
+  'eastern-kingdoms': { name: 'Eastern Kingdoms', src: '/maps/eastern-kingdoms.jpg', width: 1002, height: 668, crop: [345, 0, 390, 650] },
 }
 
 /** Marker position of each zone, in pixels of its continent image. Placed by eye. */
