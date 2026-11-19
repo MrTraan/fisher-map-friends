@@ -124,7 +124,8 @@ export default function App() {
             ))}
           </div>
           <p className="muted small">
-            Where fish and crates are caught comes from catch reports in Wowhead's WoW Forever database.
+            Where fish and crates are caught comes from the "Fished in" catch reports in Wowhead's WoW Forever
+            database.
             Skill levels, pools and crate contents are still Classic-era data, and fish new in Forever are
             missing.
           </p>

@@ -1,4 +1,5 @@
 import { CONTAINERS } from '../data/containers'
+import type { Report } from '../data/reports'
 import type { Container, Zone } from '../data/types'
 import { ItemIcon, WowheadLink } from './ItemIcon'
 import {
@@ -21,10 +22,19 @@ interface Props {
   onSelect: (s: Selection) => void
 }
 
+/** Share of a zone's catches, e.g. "62%", "0.4%" or "under 0.1%". */
+function shareText([catches, total]: Report) {
+  const pct = (100 * catches) / total
+  if (pct >= 1) return `${Math.round(pct)}%`
+  if (pct >= 0.1) return `${pct.toFixed(1)}%`
+  return 'under 0.1%'
+}
+
 /** How well a catch is backed: Wowhead's Forever reports, or Classic data only. */
-function reportsLabel(reports: number | undefined) {
+function reportsLabel(reports: Report | undefined) {
   if (reports === undefined) return 'Classic data, not confirmed in Forever'
-  return `${reports} ${reports === 1 ? 'report' : 'reports'}${reports < 10 ? ' (few)' : ''}`
+  const [catches] = reports
+  return `${catches.toLocaleString('en')} ${catches === 1 ? 'catch' : 'catches'}${catches < 10 ? ' (few)' : ''} · ${shareText(reports)} of all catches here`
 }
 
 /** Item name behind a selection, used to find its icon. Zones have none. */
@@ -68,10 +78,11 @@ function skillText(z: Zone) {
 }
 
 /** Zones for a fish or container. With `reports`, the most reported zones come first. */
-function ZoneList({ zones, onSelect, reports }: { zones: Zone[]; onSelect: Props['onSelect']; reports?: (z: Zone) => number | undefined }) {
-  if (zones.length === 0) return <p className="muted">No zone recorded yet.</p>
+function ZoneList({ zones, onSelect, reports }: { zones: Zone[]; onSelect: Props['onSelect']; reports?: (z: Zone) => Report | undefined }) {
+  if (zones.length === 0) return <p className="muted">No catches reported in WoW Forever yet.</p>
+  const count = (z: Zone) => reports?.(z)?.[0] ?? -1
   const sorted = [...zones].sort((a, b) =>
-    reports ? (reports(b) ?? -1) - (reports(a) ?? -1) || a.minSkill - b.minSkill : a.minSkill - b.minSkill || a.name.localeCompare(b.name),
+    reports ? count(b) - count(a) || a.minSkill - b.minSkill : a.minSkill - b.minSkill || a.name.localeCompare(b.name),
   )
   return (
     <ul className="rows">
@@ -146,8 +157,7 @@ function ZoneDetail({ zone, onSelect }: { zone: Zone; onSelect: Props['onSelect'
             <div key={c.id} className="container-card">
               <Link to={{ type: 'container', id: c.id }} onSelect={onSelect}>{c.name}</Link>
               <span className="muted small">
-                {' '}· {c.kind}
-                {c.withFish ? '' : ` · ${reportsLabel(containerReports(c.id, zone.id))}`}
+                {' '}· {c.kind} · {reportsLabel(containerReports(c.id, zone.id))}
               </span>
               <Contents c={c} onSelect={onSelect} />
             </div>
@@ -218,7 +228,7 @@ function ContainerDetail({ id, onSelect }: { id: string; onSelect: Props['onSele
         <ZoneList
           zones={zones}
           onSelect={onSelect}
-          reports={c.withFish ? (z) => fishReports(c.withFish!, z.id) : (z) => containerReports(c.id, z.id)}
+          reports={(z) => containerReports(c.id, z.id)}
         />
       </section>
     </>

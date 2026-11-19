@@ -1,6 +1,6 @@
 import { CONTAINERS, POOLS } from '../data/containers'
 import { FISH } from '../data/fish'
-import { CLASSIC_FISH_ZONES, CONTAINER_REPORTS, FISH_REPORTS } from '../data/reports'
+import { CONTAINER_REPORTS, FISH_REPORTS, type Report } from '../data/reports'
 import { ZONES } from '../data/zones'
 import type { Container, Fish, Zone } from '../data/types'
 
@@ -16,26 +16,26 @@ export const containerById = new Map<string, Container>(CONTAINERS.map((c) => [c
 
 const zonesFromIds = (ids: string[]) => ids.flatMap((id) => zoneById.get(id) ?? [])
 
-/** Number of catches Wowhead recorded for a fish in a zone; undefined when only Classic data says so. */
-export function fishReports(fishId: string, zoneId: string): number | undefined {
+/** Catches Wowhead recorded for a fish in a zone, and all catches recorded there. */
+export function fishReports(fishId: string, zoneId: string): Report | undefined {
   return FISH_REPORTS[fishId]?.[zoneId]
 }
 
-export function containerReports(containerId: string, zoneId: string): number | undefined {
+export function containerReports(containerId: string, zoneId: string): Report | undefined {
   return CONTAINER_REPORTS[containerId]?.[zoneId]
 }
 
+/** Zones where a fish has been reported in WoW Forever. Fish with no reports have none. */
 export function zonesForFish(fishId: string): Zone[] {
-  return zonesFromIds([...Object.keys(FISH_REPORTS[fishId] ?? {}), ...(CLASSIC_FISH_ZONES[fishId] ?? [])])
+  return zonesFromIds(Object.keys(FISH_REPORTS[fishId] ?? {}))
 }
 
-/** Fish caught in a zone, most reported first; fish known only from Classic data come last. */
-export function fishForZone(zoneId: string): { fish: Fish; reports?: number }[] {
-  return FISH.flatMap((fish): { fish: Fish; reports?: number }[] => {
+/** Fish reported in a zone, most reported first. */
+export function fishForZone(zoneId: string): { fish: Fish; reports: Report }[] {
+  return FISH.flatMap((fish) => {
     const reports = fishReports(fish.id, zoneId)
-    if (reports !== undefined) return [{ fish, reports }]
-    return CLASSIC_FISH_ZONES[fish.id]?.includes(zoneId) ? [{ fish }] : []
-  }).sort((a, b) => (b.reports ?? -1) - (a.reports ?? -1))
+    return reports === undefined ? [] : [{ fish, reports }]
+  }).sort((a, b) => b.reports[0] - a.reports[0])
 }
 
 export function zonesForContainer(c: Container): Zone[] {

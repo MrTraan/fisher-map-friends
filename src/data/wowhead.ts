@@ -127,5 +127,5 @@ export function iconUrl(name: string, size: 'small' | 'medium' | 'large' = 'medi
 
 export function wowheadUrl(name: string) {
   const entry = WOWHEAD[name]
-  return entry ? `https://www.wowhead.com/classic/item=${entry[0]}` : null
+  return entry ? `https://www.wowhead.com/forever/item=${entry[0]}` : null
 }

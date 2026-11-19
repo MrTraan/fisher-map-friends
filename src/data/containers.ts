@@ -118,7 +118,7 @@ export const CONTAINERS: Container[] = [
   },
   {
     id: 'bloated-salmon', name: 'Bloated Salmon', kind: 'bloated fish',
-    contents: ['Azerothian Diamond', 'Blue Sapphire', 'Huge Emerald', 'Large Opal', 'Star Ruby', 'Rings (item level 52-60)'], withFish: 'sunscale',
+    contents: ['Azerothian Diamond', 'Blue Sapphire', 'Huge Emerald', 'Large Opal', 'Star Ruby', 'Rings (item level 52-60)'], withFish: 'whitescale',
   },
   {
     id: 'big-mouth-clam', name: 'Big-mouth Clam', kind: 'other',
