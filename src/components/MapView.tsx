@@ -1,5 +1,5 @@
 import { ZONES } from '../data/zones'
-import type { Zone } from '../data/types'
+import { tierIndex, type MapProps } from './mapShared'
 
 const CELL_W = 124
 const CELL_H = 62
@@ -9,23 +9,8 @@ const EK_X = 4 * CELL_W + 56
 const WIDTH = EK_X + 4 * CELL_W
 const HEIGHT = TOP + 8 * CELL_H
 
-export const TIERS = [25, 75, 150, 225, 300, 425]
-
-function tierIndex(z: Zone) {
-  const i = TIERS.indexOf(z.noGetawaySkill)
-  return i === -1 ? TIERS.length - 1 : i
-}
-
-interface Props {
-  highlighted: Set<string>
-  /** True when the highlight comes from a fish or item, so other zones are dimmed. */
-  dimOthers: boolean
-  selectedZone: string | null
-  skill: number | null
-  onSelect: (zoneId: string) => void
-}
-
-export function MapView({ highlighted, dimOthers, selectedZone, skill, onSelect }: Props) {
+/** Schematic fallback map: zones as tiles in roughly their geographic position. */
+export function MapView({ highlighted, dimOthers, selectedZone, skill, onSelect }: MapProps) {
   return (
     <svg className="map" viewBox={`0 0 ${WIDTH} ${HEIGHT}`} role="group" aria-label="Schematic map of Azeroth">
       <text className="continent" x={2 * CELL_W} y={20} textAnchor="middle">Kalimdor</text>
