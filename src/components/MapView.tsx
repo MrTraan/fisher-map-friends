@@ -16,7 +16,8 @@ export function MapView({ highlighted, dimOthers, selectedZone, skill, onSelect 
       <text className="continent" x={2 * CELL_W} y={20} textAnchor="middle">Kalimdor</text>
       <text className="continent" x={EK_X + 2 * CELL_W} y={20} textAnchor="middle">Eastern Kingdoms</text>
       {ZONES.map((z) => {
-        const x = (z.continent === 'kalimdor' ? 0 : EK_X) + z.grid.c * CELL_W + GAP / 2
+        if (!z.grid) return null
+        const x =(z.continent === 'kalimdor' ? 0 : EK_X) + z.grid.c * CELL_W + GAP / 2
         const y = TOP + z.grid.r * CELL_H + GAP / 2
         const w = z.grid.w * CELL_W - GAP
         const h = z.grid.h * CELL_H - GAP

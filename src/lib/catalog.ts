@@ -1,5 +1,6 @@
 import { CONTAINERS, POOLS } from '../data/containers'
 import { FISH } from '../data/fish'
+import { CLASSIC_FISH_ZONES, CONTAINER_REPORTS, FISH_REPORTS } from '../data/reports'
 import { ZONES } from '../data/zones'
 import type { Container, Fish, Zone } from '../data/types'
 
@@ -13,13 +14,34 @@ export const fishById = new Map<string, Fish>(FISH.map((f) => [f.id, f]))
 export const zoneById = new Map<string, Zone>(ZONES.map((z) => [z.id, z]))
 export const containerById = new Map<string, Container>(CONTAINERS.map((c) => [c.id, c]))
 
+const zonesFromIds = (ids: string[]) => ids.flatMap((id) => zoneById.get(id) ?? [])
+
+/** Number of catches Wowhead recorded for a fish in a zone; undefined when only Classic data says so. */
+export function fishReports(fishId: string, zoneId: string): number | undefined {
+  return FISH_REPORTS[fishId]?.[zoneId]
+}
+
+export function containerReports(containerId: string, zoneId: string): number | undefined {
+  return CONTAINER_REPORTS[containerId]?.[zoneId]
+}
+
 export function zonesForFish(fishId: string): Zone[] {
-  return ZONES.filter((z) => z.catches.some((c) => c.fish === fishId))
+  return zonesFromIds([...Object.keys(FISH_REPORTS[fishId] ?? {}), ...(CLASSIC_FISH_ZONES[fishId] ?? [])])
+}
+
+/** Fish caught in a zone, most reported first; fish known only from Classic data come last. */
+export function fishForZone(zoneId: string): { fish: Fish; reports?: number }[] {
+  return FISH.flatMap((fish): { fish: Fish; reports?: number }[] => {
+    const reports = fishReports(fish.id, zoneId)
+    if (reports !== undefined) return [{ fish, reports }]
+    return CLASSIC_FISH_ZONES[fish.id]?.includes(zoneId) ? [{ fish }] : []
+  }).sort((a, b) => (b.reports ?? -1) - (a.reports ?? -1))
 }
 
 export function zonesForContainer(c: Container): Zone[] {
+  if (CONTAINER_REPORTS[c.id]) return zonesFromIds(Object.keys(CONTAINER_REPORTS[c.id]))
   if (c.withFish) return zonesForFish(c.withFish)
-  return (c.zones ?? []).flatMap((id) => zoneById.get(id) ?? [])
+  return zonesFromIds(c.zones ?? [])
 }
 
 export function containersForZone(zoneId: string): Container[] {
@@ -92,7 +114,13 @@ export function search(query: string, limit = 12): SearchEntry[] {
     return { e, score }
   })
     .filter((x) => x !== null)
-    .sort((a, b) => a.score - b.score || a.e.label.localeCompare(b.e.label))
+    // On a tie, fish come first: "redgill" should find Raw Redgill before Bloated Redgill.
+    .sort(
+      (a, b) =>
+        a.score - b.score ||
+        Number(b.e.kind === 'Fish') - Number(a.e.kind === 'Fish') ||
+        a.e.label.localeCompare(b.e.label),
+    )
     .slice(0, limit)
     .map((x) => x.e)
 }

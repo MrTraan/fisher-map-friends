@@ -38,6 +38,7 @@ export const ZONE_POS: Record<string, [number, number]> = {
   silithus: [431, 571],
   ungoro: [495, 564],
   tanaris: [552, 571],
+  'mount-hyjal': [526, 223],
 
   // Eastern Kingdoms
   tirisfal: [443, 148],
@@ -57,4 +58,6 @@ export const ZONE_POS: Record<string, [number, number]> = {
   duskwood: [473, 513],
   'swamp-of-sorrows': [552, 507],
   stv: [469, 577],
+  'deadwind-pass': [513, 498],
+  riverglades: [603, 434],
 }

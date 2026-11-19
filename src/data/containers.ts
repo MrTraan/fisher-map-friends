@@ -1,6 +1,8 @@
 import type { Container, Pool } from './types'
 
-// Baseline: Classic-era loot. Crates and trunks come mostly from pools.
+// Contents and pools are Classic-era data, not yet confirmed for WoW Forever.
+// Where each container is fished up comes from reports.ts when Wowhead has reports;
+// the `zones` lists here are the Classic fallback.
 export const CONTAINERS: Container[] = [
   {
     id: 'message-in-a-bottle', name: 'Message in a Bottle', kind: 'other',

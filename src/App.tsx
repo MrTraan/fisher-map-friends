@@ -4,6 +4,7 @@ import { DetailPanel } from './components/DetailPanel'
 import { MapView } from './components/MapView'
 import { TIERS, type MapProps } from './components/mapShared'
 import { CONTINENT_ART } from './data/mapArt'
+import { ZONES } from './data/zones'
 import { SearchBar } from './components/SearchBar'
 import { zonesForSelection, type Selection } from './lib/catalog'
 
@@ -79,9 +80,27 @@ export default function App() {
                 : 'Each zone shows "skill to cast / skill for no getaways".'}
             </span>
           </div>
+          <div className="off-map">
+            <span>Not on the map:</span>
+            {ZONES.filter((z) => z.continent === 'other').map((z) => (
+              <button
+                key={z.id}
+                type="button"
+                className={[
+                  'off-map-zone',
+                  highlighted.has(z.id) ? 'hit' : mapProps.dimOthers ? 'dim' : '',
+                  skill !== null && skill < z.minSkill ? 'locked' : '',
+                ].join(' ')}
+                onClick={() => mapProps.onSelect(z.id)}
+              >
+                {z.name}
+              </button>
+            ))}
+          </div>
           <p className="muted small">
-            Data is a Classic-era baseline and has not been checked against WoW Forever yet. New Forever fish
-            and zones are missing.
+            Where fish and crates are caught comes from catch reports in Wowhead's WoW Forever database.
+            Skill levels, pools and crate contents are still Classic-era data, and fish new in Forever are
+            missing.
           </p>
         </div>
         <aside className="panel">

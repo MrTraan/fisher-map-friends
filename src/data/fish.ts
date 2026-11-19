@@ -1,6 +1,7 @@
 import type { Fish } from './types'
 
-// Baseline: Classic-era fish. Fish that are new in WoW Forever are not listed yet.
+// Classic-era fish, all present in WoW Forever's item data. Where each is caught is in reports.ts.
+// Fish that are new in WoW Forever (for example Whimsyfin) are not listed yet.
 export const FISH: Fish[] = [
   { id: 'smallfish', name: 'Raw Brilliant Smallfish', note: 'Cooking (skill 1).' },
   { id: 'mud-snapper', name: 'Raw Longjaw Mud Snapper', note: 'Cooking.' },

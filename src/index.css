@@ -97,6 +97,15 @@ main { flex: 1; display: grid; grid-template-columns: minmax(0, 1fr) 380px; gap:
 .pin:hover .pin-label, .pin:focus-visible .pin-label, .pin.hit .pin-label { display: block; }
 .pin:hover circle, .pin:focus-visible circle { stroke: var(--accent); }
 
+.off-map { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; font-size: 0.85rem; color: var(--muted); }
+.off-map-zone {
+  font: inherit; color: var(--text); background: var(--surface-2); border: 2px solid var(--border);
+  border-radius: 999px; padding: 2px 10px; cursor: pointer;
+}
+.off-map-zone:hover, .off-map-zone.hit { border-color: var(--accent); }
+.off-map-zone.dim { opacity: 0.35; }
+.off-map-zone.locked { border-style: dashed; }
+
 .legend { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 14px; font-size: 0.85rem; }
 .legend-item { display: inline-flex; align-items: center; gap: 5px; }
 .swatch { display: inline-block; width: 14px; height: 14px; border-radius: 4px; }
