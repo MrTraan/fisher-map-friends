@@ -22,3 +22,6 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Game data downloaded by scripts/build-glows.ts
+/cache

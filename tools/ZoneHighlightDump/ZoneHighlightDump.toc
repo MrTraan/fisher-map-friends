@@ -1,0 +1,7 @@
+## Interface: 16001
+## Title: Zone Highlight Dump
+## Notes: Lists the highlight layer the world map uses for every zone. Type /zonedump, then /reload.
+## Version: 1.0
+## SavedVariables: ZoneHighlightDumpDB
+
+ZoneHighlightDump.lua

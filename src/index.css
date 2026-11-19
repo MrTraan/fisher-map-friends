@@ -97,6 +97,48 @@ main { flex: 1; display: grid; grid-template-columns: minmax(0, 1fr) 380px; gap:
 .pin:hover .pin-label, .pin:focus-visible .pin-label, .pin.hit .pin-label { display: block; }
 .pin:hover circle, .pin:focus-visible circle { stroke: var(--accent); }
 
+.shape { cursor: pointer; outline: none; }
+.shape path { fill-opacity: 0.55; stroke: rgb(255 255 255 / 0.8); stroke-width: 1; stroke-linejoin: round; transition: fill-opacity 0.12s; }
+.shape.tier-0 path { fill: var(--tier-0); }
+.shape.tier-1 path { fill: var(--tier-1); }
+.shape.tier-2 path { fill: var(--tier-2); }
+.shape.tier-3 path { fill: var(--tier-3); }
+.shape.tier-4 path { fill: var(--tier-4); }
+.shape.tier-5 path { fill: var(--tier-5); }
+.shape:hover path, .shape:focus-visible path { fill-opacity: 0.7; stroke: var(--accent); stroke-width: 2; }
+.shape.hit path, .shape.selected path { fill-opacity: 0.72; stroke: var(--accent); stroke-width: 2.5; }
+.shape.dim path { fill-opacity: 0.1; stroke: rgb(255 255 255 / 0.25); }
+.shape.locked path { fill-opacity: 0.15; stroke-dasharray: 4 3; }
+.shape.locked.hit path { fill-opacity: 0.4; }
+.shape:hover .pin-label, .shape:focus-visible .pin-label, .shape.hit .pin-label, .shape.selected .pin-label { display: block; }
+
+.glow { cursor: pointer; outline: none; }
+.glow path { fill: transparent; stroke: none; }
+.glow rect { pointer-events: none; fill-opacity: 0.75; transition: fill-opacity 0.12s; }
+.glow.tier-0 rect { fill: var(--tier-0); }
+.glow.tier-1 rect { fill: var(--tier-1); }
+.glow.tier-2 rect { fill: var(--tier-2); }
+.glow.tier-3 rect { fill: var(--tier-3); }
+.glow.tier-4 rect { fill: var(--tier-4); }
+.glow.tier-5 rect { fill: var(--tier-5); }
+.glow:hover rect, .glow:focus-visible rect { fill-opacity: 1; }
+.glow.hit rect, .glow.selected rect { fill: var(--accent); fill-opacity: 0.85; }
+.glow.dim rect { fill-opacity: 0.12; }
+.glow.locked rect { fill-opacity: 0.25; }
+.glow.locked.hit rect { fill-opacity: 0.5; }
+.glow:hover .pin-label, .glow:focus-visible .pin-label, .glow.hit .pin-label, .glow.selected .pin-label { display: block; }
+
+.mode-toggle { display: flex; align-items: center; gap: 0; font-size: 0.85rem; color: var(--muted); }
+.mode-toggle span { margin-right: 8px; }
+.mode-toggle button {
+  font: inherit; color: var(--text); background: var(--surface-2); border: 1px solid var(--border);
+  padding: 3px 12px; cursor: pointer;
+}
+.mode-toggle button:first-of-type { border-radius: 8px 0 0 8px; }
+.mode-toggle button + button { border-left: none; }
+.mode-toggle button:last-of-type { border-radius: 0 8px 8px 0; }
+.mode-toggle button[aria-pressed='true'] { background: var(--accent); color: #1a1a1a; border-color: var(--accent); }
+
 .off-map { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; font-size: 0.85rem; color: var(--muted); }
 .off-map-zone {
   font: inherit; color: var(--text); background: var(--surface-2); border: 2px solid var(--border);

@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
-import { ArtMapView } from './components/ArtMapView'
+import { ArtMapView, type MapMode } from './components/ArtMapView'
 import { DetailPanel } from './components/DetailPanel'
 import { MapView } from './components/MapView'
 import { TIERS, type MapProps } from './components/mapShared'
@@ -34,6 +34,22 @@ export default function App() {
   const [selection, setSelection] = useState<Selection | null>(null)
   const [skillText, setSkillText] = useState('')
   const artAvailable = useArtAvailable()
+  const [mapMode, setMapMode] = useState<MapMode>(() => {
+    try {
+      const saved = localStorage.getItem('mapMode')
+      return saved === 'dots' || saved === 'shapes' ? saved : 'glow'
+    } catch {
+      return 'glow'
+    }
+  })
+  const chooseMapMode = (mode: MapMode) => {
+    setMapMode(mode)
+    try {
+      localStorage.setItem('mapMode', mode)
+    } catch {
+      // Storage can be unavailable (private window); the choice then lasts for this visit only.
+    }
+  }
 
   const highlighted = useMemo(() => zonesForSelection(selection), [selection])
   const skill = skillText.trim() === '' || Number.isNaN(Number(skillText)) ? null : Number(skillText)
@@ -66,7 +82,17 @@ export default function App() {
 
       <main>
         <div className="map-wrap">
-          {artAvailable ? <ArtMapView {...mapProps} /> : <MapView {...mapProps} />}
+          {artAvailable && (
+            <div className="mode-toggle" role="group" aria-label="How zones are drawn">
+              <span>Zones as</span>
+              {(['glow', 'shapes', 'dots'] as MapMode[]).map((m) => (
+                <button key={m} type="button" aria-pressed={mapMode === m} onClick={() => chooseMapMode(m)}>
+                  {m === 'glow' ? 'Glow' : m === 'shapes' ? 'Shapes' : 'Dots'}
+                </button>
+              ))}
+            </div>
+          )}
+          {artAvailable ? <ArtMapView mode={mapMode} {...mapProps} /> : <MapView {...mapProps} />}
           <div className="legend">
             <span>Skill for no getaways:</span>
             {TIERS.map((t, i) => (
@@ -76,7 +102,7 @@ export default function App() {
             ))}
             <span className="muted">
               {artAvailable
-                ? 'Hover a marker for the zone name and "skill to cast / skill for no getaways".'
+                ? 'Hover a zone for its name and "skill to cast / skill for no getaways".'
                 : 'Each zone shows "skill to cast / skill for no getaways".'}
             </span>
           </div>
