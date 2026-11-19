@@ -139,6 +139,11 @@ export const POOLS: Pool[] = [
     note: 'Salt water.',
   },
   {
+    id: 'sagefish-school', name: 'Sagefish School', loot: ['Raw Sagefish'],
+    zones: ['hillsbrad'],
+    note: 'Fresh water. Seen in WoW Forever by a player.',
+  },
+  {
     id: 'eel-swarm', name: 'Stonescale Eel Swarm', loot: ['Stonescale Eel'],
     zones: ['azshara', 'feralas', 'stv', 'tanaris'],
     note: 'Salt water.',

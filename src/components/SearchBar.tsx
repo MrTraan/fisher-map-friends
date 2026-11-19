@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react'
 import { search, type Selection } from '../lib/catalog'
 import { ItemIcon } from './ItemIcon'
 
-export function SearchBar({ onSelect }: { onSelect: (s: Selection) => void }) {
+export function SearchBar({ onSelect }: { onSelect: (s: Selection | null) => void }) {
   const [query, setQuery] = useState('')
   const [open, setOpen] = useState(false)
   const [active, setActive] = useState(0)
@@ -25,6 +25,8 @@ export function SearchBar({ onSelect }: { onSelect: (s: Selection) => void }) {
         value={query}
         onChange={(e) => {
           setQuery(e.target.value)
+          // Emptying the box (by hand or with its clear button) also drops what was picked.
+          if (e.target.value === '') onSelect(null)
           setActive(0)
           setOpen(true)
         }}
